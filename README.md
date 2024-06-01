@@ -1,6 +1,6 @@
 # 🌐 Universal Graph - ETHPrague2024
 
-![Cover image hackathon EthPrague 2024](./public/ethprague-hackathon-cover.png)
+![Cover image hackathon EthPrague 2024](./docs/ogp.png)
 
 ## Presentation
 
