@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "graph:profile": "ts-node ./api/graph-ql-profile.ts",
-    "graph:assets": "ts-node ./api/graph-ql-assets.ts",
-    "graph:txs": "ts-node ./api/graph-ql-txs.ts"
+    "graph:profile": "ts-node ./api/graph-ql-query.ts profiles",
+    "graph:assets": "ts-node ./api/graph-ql-query.ts assets",
+    "graph:txs": "ts-node ./api/graph-ql-query.ts txs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.40.0",
