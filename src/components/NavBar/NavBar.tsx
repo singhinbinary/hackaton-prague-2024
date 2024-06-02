@@ -55,7 +55,6 @@ const NavBar = () => {
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 <p
-                  href="#"
                   className="text-white px-3 py-2 text-lg font-large"
                   aria-current="page"
                 >

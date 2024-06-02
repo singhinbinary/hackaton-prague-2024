@@ -1,5 +1,4 @@
-import { ConnectKitButton } from 'connectkit';
-
+import { useState } from 'react';
 import ProfilesList from '../ProfilesList/ProfilesList';
 
 export default function LeftColumn() {
@@ -8,7 +7,6 @@ export default function LeftColumn() {
       <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">
         Instructions
       </h1>
-      {/* <ConnectKitButton /> */}
 
       <p className="leading-relaxed mb-3">
         Click on the right button. This will load neo4j data and display a graph

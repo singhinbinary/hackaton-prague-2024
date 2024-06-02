@@ -52,12 +52,12 @@ export default function RightColumn() {
 
     // Let's list the force we wanna apply on the network
     const simulation = d3
-      .forceSimulation(graphData.nodes) // Force algorithm is applied to data.nodes
+      .forceSimulation(graphData.nodes as any) // Force algorithm is applied to data.nodes
       .force(
         'link',
         d3
           .forceLink() // This force provides links between nodes
-          .id(function (d) {
+          .id(function (d: any) {
             return d.id;
           }) // This provide  the id of a node
           .links(graphData.links), // and this the list of links
@@ -69,25 +69,25 @@ export default function RightColumn() {
     // This function is run at each iteration of the force algorithm, updating the nodes position.
     function ticked() {
       link
-        .attr('x1', function (d) {
-          return d.source.x;
+        .attr('x1', function (d: any) {
+          return (d.source as any).x;
         })
         .attr('y1', function (d) {
-          return d.source.y;
+          return (d.source as any).y;
         })
         .attr('x2', function (d) {
-          return d.target.x;
+          return (d.target as any).x;
         })
         .attr('y2', function (d) {
-          return d.target.y;
+          return (d.target as any).y;
         });
 
       node
         .attr('cx', function (d) {
-          return d.x + 6;
+          return (d as any).x + 6;
         })
         .attr('cy', function (d) {
-          return d.y - 6;
+          return (d as any).y - 6;
         });
     }
     // });
@@ -138,7 +138,7 @@ export default function RightColumn() {
           name: end.properties.name,
         });
 
-        segments.map((segment) => {
+        segments.map((segment: any) => {
           fetchedLinks.push({
             source: segment.start.elementId,
             target: segment.end.elementId,
