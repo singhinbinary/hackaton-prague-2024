@@ -1,6 +1,6 @@
 import { ConnectKitButton } from 'connectkit';
 
-import Example from '../Example';
+import ProfilesList from '../ProfilesList/ProfilesList';
 
 export default function LeftColumn() {
   return (
@@ -14,7 +14,7 @@ export default function LeftColumn() {
         Click on the right button. This will load neo4j data and display a graph
       </p>
 
-      <Example />
+      <ProfilesList />
     </div>
   );
 }

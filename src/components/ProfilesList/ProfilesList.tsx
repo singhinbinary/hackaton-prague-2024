@@ -19,7 +19,7 @@ const people = [
   },
 ];
 
-export default function Example() {
+export default function ProfilesList() {
   return (
     <ul className="divide-y divide-gray-200">
       {people.map((person) => (

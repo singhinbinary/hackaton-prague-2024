@@ -3,7 +3,6 @@ import type { NextPage } from 'next';
 
 // components
 import NavBar from '../components/NavBar/NavBar';
-import Example from '../components/Example';
 
 // styles
 import LeftColumn from '../components/LeftColumn/LeftColumn';
