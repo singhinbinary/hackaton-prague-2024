@@ -1,89 +1,81 @@
+import { GRAPH_URL } from '../constant';
+import { NAME, iconsList } from './interface';
 import {
-  GRAPH_URL,
-  QUERY_TRANSACTIONS,
-  QUERY_ASSETS,
-  QUERY_PROFILES,
-} from '../constant';
-import fs from 'fs';
-
-type Args = { query: string; name: string };
-
-async function getCommandArgument(): Promise<Args> {
-  const arg = process.argv[2];
-
-  switch (arg) {
-    case 'profiles':
-      return { query: QUERY_PROFILES, name: 'Profiles' };
-    case 'assets':
-      return { query: QUERY_ASSETS, name: 'Assets' };
-    case 'txs':
-      return { query: QUERY_TRANSACTIONS, name: 'Transactions' };
-    default:
-      throw new Error(
-        "Unrecognised command argument. Available options are 'profiles', 'assets' or 'txs' ",
-      );
-  }
-}
+  generateQuery,
+  getCommandArgument,
+  writeDataToCsv,
+  writeToJson,
+} from './utils';
 
 const getData = async (query: string, name: string) => {
-  const runQuery = async () => {
-    try {
-      const headers = {
-        'content-type': 'application/json',
-      };
-      const requestBody = {
-        extension: {},
-        operationName: 'MyQuery',
-        query: query,
-      };
-      const options = {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(requestBody),
-      };
-      const response = await fetch(GRAPH_URL, options);
-      const responseJson = await response.json();
+  try {
+    const headers = {
+      'content-type': 'application/json',
+    };
+    const requestBody = {
+      extension: {},
+      operationName: 'MyQuery',
+      query: query,
+    };
+    const options = {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(requestBody),
+    };
+    const response = await fetch(GRAPH_URL, options);
+    const responseJson = await response.json();
 
-      console.log('RESPONSE FROM GRAPH_URL REQUEST', responseJson?.data);
+    writeToJson(name, responseJson);
 
-      fs.writeFile(
-        `./graphql-${name}.json`,
-        JSON.stringify(responseJson),
-        () => {
-          console.log(`Saved to JSON file \`graphql-${name}.json\` 🫡`);
-        },
-      );
-
-      return responseJson;
-    } catch (error) {
-      console.log('ERROR DURING GRAPH_URL REQUEST', error);
-      throw error;
-    }
-  };
-
-  setTimeout(() => runQuery(), 2000);
+    return responseJson.data;
+  } catch (error) {
+    console.log('ERROR DURING GRAPH_URL REQUEST', error);
+    throw error;
+  }
 };
 
-getCommandArgument().then((cmdArgs: Args) => {
-  const { query, name } = cmdArgs;
+const processData = (name: string, data: any) => {
+  let dataToProcess: any;
+  switch (name) {
+    case NAME.PROFILES:
+      dataToProcess = data.profiles;
+    case NAME.TRANSACTIONS:
+      dataToProcess = data.transactions;
+  }
 
-  // for debugging purpose, to recognise in the terminal what we are querying
-  const iconsList: { [key: string]: string } = {
-    Profiles: '🥝',
-    Assets: '🥥',
-    Transactions: '🍍',
-  };
+  dataToProcess.forEach((entity: any) => {
+    writeDataToCsv(name, entity);
+  });
+};
+
+const main = async () => {
+  const { name } = await getCommandArgument();
 
   const icon = iconsList[name];
 
   console.log('🤔 Contacting Graph Node...');
   console.log(`${icon} Querying ${name}`, GRAPH_URL);
 
-  getData(query, name)
-    .then(() => {
-      console.log('Hang tight!');
-    })
-    .catch((error) => {
-      console.log('❌', error);
-    });
-});
+  for (let counter = 0; counter < 10; counter++) {
+    const offset = counter * 1000;
+    const query = generateQuery(name, offset);
+
+    console.log('📝Query', query);
+
+    if (!query) {
+      throw new Error('❌No query');
+    }
+
+    const data = await getData(query, name);
+
+    if (!data) {
+      throw new Error('❌No data');
+    }
+
+    processData(name, data);
+  }
+};
+
+main()
+  .then(() => console.log('✅'))
+  .catch((e) => console.log('⚠️', e));
