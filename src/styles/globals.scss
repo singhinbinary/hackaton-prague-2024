@@ -12,3 +12,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#my_dataviz svg {
+  min-width: 70rem;
+  min-height: 70rem;
+}
