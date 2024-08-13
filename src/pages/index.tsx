@@ -10,7 +10,7 @@ const Home: NextPage = () => {
     <div>
       <NavBar />
       <section className="text-gray-600 body-font">
-        <div className="container px-5 py-24 mx-auto">
+        <div className="container px-2 mx-auto">
           <SocialGraph />
         </div>
       </section>
