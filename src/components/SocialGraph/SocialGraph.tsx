@@ -1,16 +1,10 @@
 import { useState } from 'react';
-import { config as dotenvConfig } from 'dotenv';
-import { resolve } from 'path';
-
-import exampleData from './exampleData';
-
-const DEV_MODE = false;
-
-// librairies
 import neo4j from 'neo4j-driver';
 import * as d3 from 'd3';
 
-dotenvConfig();
+import exampleProfileData from '../../../data/exampleProfileData';
+
+const DEV_MODE = true;
 
 type GraphNode = { id: string; name: string; profileImage: string };
 type GraphLink = { source: string; target: string };
@@ -96,14 +90,13 @@ export default function SocialGraph() {
 
   // TODO: put in service.js inside scripts
   const loadGraph = async () => {
-    // TODO: fetch from .env file
-    const URI = 'neo4j+s://1a0611a2.databases.neo4j.io:7687';
-    const USER = 'neo4j';
-    const PASSWORD = 'rPc1gSqxHIuiQYZidMvKHOUtxRGx0PwTmJwdnOtMB2M';
+    const URI = process.env.NEXT_PUBLIC_NEO4J_URI;
+    const USER = process.env.NEXT_PUBLIC_NEO4J_USER;
+    const PASSWORD = process.env.NEXT_PUBLIC_NEO4J_PASSWORD;
 
-    console.log('URI', URI);
-    console.log('USER', USER);
-    console.log('PASSWORD', PASSWORD);
+    if ([URI, USER, PASSWORD].includes(undefined)) {
+      throw new Error('Missing some NEO4J Environnement variable');
+    }
 
     let driver;
 
@@ -113,7 +106,10 @@ export default function SocialGraph() {
 
       // Fetch from Neo4j db if not in DEV mode
       if (!DEV_MODE) {
-        driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD));
+        driver = neo4j.driver(
+          URI as string,
+          neo4j.auth.basic(USER as string, PASSWORD as string),
+        );
         const session = driver.session();
 
         const serverInfo = await driver.getServerInfo();
@@ -129,9 +125,6 @@ export default function SocialGraph() {
         result.records.map((record) => {
           const result = record.get('p');
           const { start, end, segments } = result;
-
-          // console.log('start.properties', start.properties);
-          // console.log('end.properties', end.properties);
 
           fetchedNodes.push({
             id: start.elementId,
@@ -155,7 +148,7 @@ export default function SocialGraph() {
           session.close();
         });
       } else {
-        const { start, end, segments } = exampleData;
+        const { start, end, segments } = exampleProfileData;
 
         fetchedNodes.push({
           id: start.elementId,
