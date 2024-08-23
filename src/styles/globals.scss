@@ -13,7 +13,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#my_dataviz svg {
+#social_graph_visualization svg {
   min-width: 70rem;
   min-height: 70rem;
+
+  
 }
+
+#social_graph_visualization {
+
+    overflow:scroll !important;
+
+    ::-webkit-scrollbar {
+        -webkit-appearance: initial !important;
+        width: 10px !important;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        border-radius: 5px !important;
+        background-color: rgba(0,0,0,.5) !important;
+        -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5) !important;
+      } 
+}
+
+  
+  

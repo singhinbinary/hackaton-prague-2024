@@ -33,10 +33,15 @@ export default function SocialGraph() {
 
     // Initialize the svg container
     const svg = d3
-      .select('#my_dataviz svg')
+      .select('#social_graph_visualization svg')
       .attr('viewBox', [0, 0, width, height])
       .attr('preserveAspectRatio', 'xMinYMin meet')
-      .classed('svg-content-responsive', true);
+      .classed('svg-content-responsive', true)
+      .call(
+        d3.zoom().on('zoom', (event) => {
+          svg.attr('transform', event.transform);
+        }) as any,
+      );
 
     const defs = svg.append('svg:defs');
 
@@ -189,7 +194,7 @@ export default function SocialGraph() {
         console.log(serverInfo);
 
         const result = await session.run(
-          'MATCH p=()-[:TX]->() RETURN p LIMIT 1000;',
+          'MATCH p=()-[:TX]->() RETURN p LIMIT 300;',
         );
         console.log('it worked! 👷🏻‍♂️', result);
 
@@ -276,7 +281,7 @@ export default function SocialGraph() {
           Connect 🆙
         </Fab>
       </div>
-      <div className="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
+      <div className="h-full bg-gray-100 bg-opacity-75 px-8 py-16 my-10 pb-24 rounded-lg overflow-hidden text-center relative">
         <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">
           Visualize Graph
         </h1>
@@ -301,7 +306,7 @@ export default function SocialGraph() {
           }}
         >
           <div
-            id="my_dataviz"
+            id="social_graph_visualization"
             style={{
               overflowX: 'auto',
               overflowY: 'auto',
