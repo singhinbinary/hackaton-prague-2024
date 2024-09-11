@@ -1,0 +1,33 @@
+{
+  "name": "portfolio",
+  "children": [
+    { "name": "LYX", "value": 50 },
+    {
+      "name": "LSP7 Tokens",
+      "children": [
+        { "name": "FABS", "value": 500 },
+        { "name": "MARJ", "value": 250 },
+        { "name": "SOON", "value": 10 },
+        { "name": "CHILL", "value": 24 }
+      ]
+    },
+    {
+      "name": "LSP7 NFTs",
+      "children": [
+        { "name": "A", "value": 10 },
+        { "name": "B", "value": 1 },
+        { "name": "C", "value": 3 },
+        { "name": "D", "value": 8 },
+        { "name": "E", "value": 1 }
+      ]
+    },
+    {
+      "name": "LSP8 NFTs",
+      "children": [
+        { "name": "Burntpix", "value": 8 },
+        { "name": "Platties", "value": 1 },
+        { "name": "LUKSOSoul", "value": 2 }
+      ]
+    }
+  ]
+}

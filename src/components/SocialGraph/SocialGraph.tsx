@@ -3,9 +3,9 @@ import neo4j from 'neo4j-driver';
 import * as d3 from 'd3';
 
 import exampleProfileData from '../../../data/exampleProfileData';
-import Button from '@mui/material/Button';
 import Fab from '@mui/material/Fab';
 import NavigationIcon from '@mui/icons-material/Navigation';
+import SearchIcon from '@mui/icons-material/Search';
 
 const DEV_MODE = false;
 
@@ -25,8 +25,8 @@ export default function SocialGraph() {
   const createD3Graph = () => {
     // set the dimensions and margins of the graph
     const margin = { top: 5, right: 5, bottom: 5, left: 5 },
-      width = 2000 - margin.left - margin.right,
-      height = 2000 - margin.top - margin.bottom;
+      width = 1500 - margin.left - margin.right,
+      height = 1500 - margin.top - margin.bottom;
 
     const nodes = graphData.nodes.map((d) => Object.create(d));
     const links = graphData.links.map((d) => Object.create(d));
@@ -106,7 +106,7 @@ export default function SocialGraph() {
           .attr('y1', (d) => d.source.y)
           .attr('x2', (d) => d.target.x)
           .attr('y2', (d) => d.target.y);
-        node.attr('cx', (d) => d.x).attr('cy', (d) => d.y); // TODO: which one should I
+        node.attr('cx', (d) => d.x).attr('cy', (d) => d.y);
       });
 
     // Initialize the nodes
@@ -172,6 +172,7 @@ export default function SocialGraph() {
     const PASSWORD = process.env.NEXT_PUBLIC_NEO4J_PASSWORD;
 
     if ([URI, USER, PASSWORD].includes(undefined)) {
+      console.log([URI, USER, PASSWORD]);
       throw new Error('Missing some NEO4J Environnement variable');
     }
 
@@ -193,8 +194,9 @@ export default function SocialGraph() {
         console.log('Connection established');
         console.log(serverInfo);
 
+        // TODO: add an extra similar query to just fetch the result for a specific UP or address 🥝
         const result = await session.run(
-          'MATCH p=()-[:TX]->() RETURN p LIMIT 300;',
+          'MATCH p=()-[:TX_BWT_PROFILES]->() RETURN p LIMIT 300;',
         );
         console.log('it worked! 👷🏻‍♂️', result);
 
@@ -280,23 +282,27 @@ export default function SocialGraph() {
           <NavigationIcon sx={{ mr: 1 }} />
           Connect 🆙
         </Fab>
+        <button
+          onClick={() => {
+            loadGraph().then(() => {
+              createD3Graph();
+            });
+          }}
+        >
+          <Fab variant="extended">
+            <SearchIcon
+              sx={{ mr: 1 }}
+              onClick={() => {
+                loadGraph().then(() => {
+                  createD3Graph();
+                });
+              }}
+            />
+            Visualise Graph
+          </Fab>
+        </button>
       </div>
       <div className="h-full bg-gray-100 bg-opacity-75 px-8 py-16 my-10 pb-24 rounded-lg overflow-hidden text-center relative">
-        <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">
-          Visualize Graph
-        </h1>
-        <div className="buttons">
-          <Button
-            variant="contained"
-            onClick={() => {
-              loadGraph().then(() => {
-                createD3Graph();
-              });
-            }}
-          >
-            Load Graph Data.
-          </Button>
-        </div>
         <div
           style={{
             display: 'flex',
